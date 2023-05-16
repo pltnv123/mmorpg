@@ -3,6 +3,9 @@ from django.db import models
 
 
 # Create your models here.
+def user_directory_path(instance, filename):
+    # путь, куда будет осуществлена загрузка MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/{1}'.format(instance.author.id, filename)
 
 class Advertisement(models.Model):
     tank = 'TK'
@@ -33,6 +36,7 @@ class Advertisement(models.Model):
     heading = models.CharField(max_length=128, help_text=('Название объявления'))
     text = models.TextField(help_text=('Это текст объявления'))
     classType = models.CharField(max_length=2, choices=CATEGORY_CHOIESES, help_text=('Тип класса'))
+    image = models.ImageField(max_length=255, upload_to=user_directory_path, null=True, blank=True)
     dateCreation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
