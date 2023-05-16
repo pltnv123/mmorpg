@@ -1,9 +1,18 @@
 {% extends 'flatpages/default.html' %}
 
 
-
-
 {% block content %}
-Hello World!
+{% for i in advertisements %}
 
+<div class="container">
+  <a href="{% url 'advertisement_detail' i.pk %}">
+    <h1>{{ i.heading }}</h1>
+  </a>
+  <p>{{ i.text }}</p>
+  <img src="#" alt="">
+    <hr>
+</div>
+
+
+{% endfor %}
 {% endblock content %}

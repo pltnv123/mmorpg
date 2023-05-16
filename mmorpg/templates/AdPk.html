@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+
+<h3>{{ Adver.author }}</h3>
+<hr>
+<h5>{{ Adver.dateCreation|date:'d M Y' }}</h5>
+<h1>{{ Adver.heading }}</h1>
+<h4>{{ Adver.text }}</h4>
+
+<hr>
+<h6><a href="{% url 'advertisement' %}"> 'На главную!' </a></h6>
+{% endblock content %}

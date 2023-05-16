@@ -4,8 +4,8 @@ from django.db import models
 
 # Create your models here.
 def user_directory_path(instance, filename):
-    # путь, куда будет осуществлена загрузка MEDIA_ROOT/user_<id>/<filename>
     return 'user_{0}/{1}'.format(instance.author.id, filename)
+
 
 class Advertisement(models.Model):
     tank = 'TK'
@@ -40,7 +40,7 @@ class Advertisement(models.Model):
     dateCreation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.heading}: {self.text}. Автор: {self.author}, тип героя: {self.classType}'
+        return f'Автор: {self.author}, Заголовок:{self.heading}, Текст: {self.text}. , тип персонажа: {self.classType}'
 
 
 class Responses(models.Model):
