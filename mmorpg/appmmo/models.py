@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -36,12 +37,14 @@ class Advertisement(models.Model):
     heading = models.CharField(max_length=128, help_text=('Название объявления'))
     text = models.TextField(help_text=('Это текст объявления'))
     classType = models.CharField(max_length=2, choices=CATEGORY_CHOIESES, help_text=('Тип класса'))
-    image = models.ImageField(max_length=255, upload_to=user_directory_path, null=True, blank=True)
+    image = models.ImageField(max_length=255,  upload_to=user_directory_path, null=True, blank=True)
     dateCreation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Автор: {self.author}, Заголовок:{self.heading}, Текст: {self.text}. , тип персонажа: {self.classType}'
 
+    def get_absolute_url(self):
+        return reverse('advertisement_detail', args=[str(self.id), ])
 
 class Responses(models.Model):
     advertisement = models.ForeignKey(Advertisement, related_name='responses', on_delete=models.CASCADE)
