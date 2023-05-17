@@ -5,14 +5,31 @@
 {% for i in advertisements %}
 
 <div class="container">
+     <h6 class="author">{{ i.author }}</h6>
   <a href="{% url 'advertisement_detail' i.pk %}">
     <h1>{{ i.heading }}</h1>
   </a>
   <p>{{ i.text }}</p>
   <img src="#" alt="">
+
+  <h6 class="data">{{ i.dateCreation }}</h6>
     <hr>
+
 </div>
 
 
+
+
+<style>
+  .author {
+    text-align: left;
+  }
+
+  .data {
+    text-align: left;
+  }
+</style>
+
 {% endfor %}
 {% endblock content %}
+
