@@ -41,7 +41,7 @@ class Advertisement(models.Model):
     dateCreation = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Автор: {self.author}, Заголовок:{self.heading}, Текст: {self.text}. , тип персонажа: {self.classType}'
+        return f'{self.heading}'
 
     def get_absolute_url(self):
         return reverse('advertisement_detail', args=[str(self.id), ])
@@ -51,5 +51,7 @@ class Responses(models.Model):
 
     user = models.ForeignKey(User, related_name='respuser', on_delete=models.CASCADE)
 
-    text = models.TextField()
+    text = models.TextField(help_text=('Поле отклика'))
     dateCreation = models.DateTimeField(auto_now_add=True)
+    is_activited = models.BooleanField(default=False)
+

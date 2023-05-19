@@ -8,11 +8,26 @@
 <h1>{{ Adver.heading }}</h1>
 <h4>{{ Adver.text }}</h4>
 
+    {% if Adver.image %}
+
 <div class="image-container">
 <img src="{{ Adver.image.url }}">
 </div>
-
+    {%  endif %}
   <hr>
+
+<a href="{% url 'response_create' Adver.pk %}" class="button">Оставить отклик</a>
+
+<h2>Отклики:</h2>
+  <ul>
+    {% for response in Adver.responses.all %}
+<li> {{ response.text }}  - {{ response.user }} || status:
+    {% if response.is_activited %} Активно {% else %} Не активно {% endif %} || ({{ response.dateCreation }})
+    <a href="{% url 'response_delete' pk=Adver.id pk_res=response.id %}"> Удалить </a>
+    {% empty %}
+    <li>Тут пока нету откликов!</li>
+    {% endfor %}
+  </ul>
 
 <div class="bottom">
   <hr>
@@ -22,14 +37,7 @@
 
 
 <style>
-  .bottom {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #f1f1f1;
-    text-align: center;
-  }
+
 
   a.button {
   display: inline-block;
@@ -54,7 +62,6 @@ a.button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
   }
 
   img {
@@ -63,6 +70,8 @@ a.button:hover {
     min-width: 200px;
     min-height: 200px;
   }
+
+
 </style>
 
 {% endblock content %}

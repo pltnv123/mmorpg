@@ -11,9 +11,14 @@
   </a>
   <p>{{ i.text }}</p>
 
-
-  <h6 class="data">{{ i.dateCreation }}</h6>
+    {% if i.image %}
+  <div class="image-container">
+  <img src="{{ i.image.url }}">
+  </div>
+    {% endif %}
+ <br> <h6 class="data">{{ i.dateCreation }}</h6> </br>
     <hr>
+
 
 </div>
 
@@ -27,6 +32,19 @@
 
   .data {
     text-align: left;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  img {
+    max-width: 1000px;
+    max-height: 1000px;
+    min-width: 200px;
+    min-height: 200px;
   }
 </style>
 

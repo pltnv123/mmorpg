@@ -1,9 +1,51 @@
 {% extends 'flatpages/default.html' %}
 
 
-
-
 {% block content %}
-Profile
 
+<form action="" method="get">
+    {% csrf_token %}
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Поиск"/>
+</form>
+
+{% for advertisement in profile %}
+<h3>ОБЪЯВЛЕНИЕ</h3>
+<h2>{{ advertisement.heading }}</h2>
+<p>{{ advertisement.text }}</p>
+<hr>
+<ul>
+    <hr>
+    <h3>ОТКЛИКИ:</h3>
+
+    {% if advertisement.responses.all %}
+    {% for response in advertisement.responses.all %}
+    <li><h4>{{ response.user }}</h4>
+        {{ response.text }}
+
+        <br>
+        <br>
+
+        <h6><a href="#" class="button">Принять!</a>    |||     <a href="{% url 'response_delete' pk=response.id %}">Удалить!</a></h6>
+
+    </li>
+
+    <br>
+
+    {% if response.is_activited %}
+    Активирован
+    {% else %}
+    Не активирован
+    {% endif %}
+
+    {% endfor %}
+
+    {% else %}
+    <h4>Откликов пока нету</h4>
+    {% endif %}
+
+    <hr>
+
+</ul>
+{% endfor %}
 {% endblock content %}
