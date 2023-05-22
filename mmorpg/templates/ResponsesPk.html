@@ -1,15 +1,14 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-  <h1>Отправить отклик</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Отправить">
-  </form>
-      <br>
-      <br>
-      <h6><a href="{{ previous_url }}" class="button">Назад!</a></h6>
+
+<h3>{{ Resp.author }}</h3>
+<hr>
+<h5>{{ Resp.dateCreation|date:'d M Y' }}</h5>
+<h4>{{ Resp.text }}</h4>
+
+
+
 
 <div class="bottom">
   <hr>
@@ -56,4 +55,5 @@ a.button:hover {
 
 </style>
 
-{% endblock %}
+{% endblock content %}
+

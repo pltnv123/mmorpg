@@ -1,25 +1,26 @@
 {% extends 'flatpages/default.html' %}
 
+
 {% block content %}
-  <h1>Отправить отклик</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Отправить">
-  </form>
-      <br>
-      <br>
+    <h1 class="text-center">{{ user }} : {{ text }} - Отклик принят!</h1>
       <h6><a href="{{ previous_url }}" class="button">Назад!</a></h6>
 
-<div class="bottom">
+
+
+    <div class="bottom">
   <hr>
   <h6><a href="/" class="button">На главную!</a></h6>
 </div>
 
-
-
 <style>
-
+  .bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+  }
 
   a.button {
   display: inline-block;
@@ -39,21 +40,5 @@ a.button:hover {
   color: #000;
 }
 
-
-.image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  img {
-    max-width: 1000px;
-    max-height: 1000px;
-    min-width: 200px;
-    min-height: 200px;
-  }
-
-
 </style>
-
-{% endblock %}
+{% endblock content %}

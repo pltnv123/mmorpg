@@ -53,5 +53,5 @@ class Responses(models.Model):
 
     text = models.TextField(help_text=('Поле отклика'))
     dateCreation = models.DateTimeField(auto_now_add=True)
-    is_activited = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
 

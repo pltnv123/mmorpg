@@ -71,10 +71,7 @@ class DeleteResponses(DeleteView):
     success_url = '/'
 
     def get_object(self, queryset=None):
-        # Получаем объект объявления по идентификатору pk
         advertisement = get_object_or_404(Advertisement, id=self.kwargs['pk'])
-
-        # Получаем объект отклика по идентификатору pk_res и связанному объявлению
         response = get_object_or_404(Responses, id=self.kwargs['pk_res'], advertisement=advertisement)
 
         return response
@@ -94,6 +91,11 @@ class ResponseCreateView(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        previous_url = self.request.META.get('HTTP_REFERER')
+        context['previous_url'] = previous_url
+        return context
 
 class ProfileView(ListView):
     model = Advertisement
@@ -111,3 +113,21 @@ class ProfileView(ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
+
+def activited_response(request, pk, pk_res):
+    advertisement = get_object_or_404(Advertisement, id=pk)
+    response = get_object_or_404(Responses, id=pk_res, advertisement=advertisement)
+    text = response.text
+    response.is_active = True
+    response.save()
+    previous_url = request.META.get('HTTP_REFERER')
+    return render(request, 'activited_response.html', {'text': text, 'previous_url': previous_url})
+
+def deactivited_response(request, pk, pk_res):
+    advertisement = get_object_or_404(Advertisement, id=pk)
+    response = get_object_or_404(Responses, id=pk_res, advertisement=advertisement)
+    text = response.text
+    response.is_active = False
+    response.save()
+    previous_url = request.META.get('HTTP_REFERER')
+    return render(request, 'deactivited_response.html', {'text': text, 'previous_url': previous_url})

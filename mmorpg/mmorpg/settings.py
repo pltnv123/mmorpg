@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'appmmo',
     'django.contrib.sites',
     'django.contrib.flatpages',
+
+    'appmmo',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'staticfiles/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -132,3 +135,26 @@ SITE_URL = 'http://127.0.0.1:8000'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
+
+LOGIN_REDIRECT_URL = "/"
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = True
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'pltnvntn'
+EMAIL_HOST_PASSWORD = "hyrevhwgyajdslff"
+EMAIL_TIMEOUT = 60
+
+DEFAULT_FROM_EMAIL = "pltnvntn@yandex.ru"
+
+

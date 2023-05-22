@@ -7,6 +7,7 @@
 <h5>{{ Adver.dateCreation|date:'d M Y' }}</h5>
 <h1>{{ Adver.heading }}</h1>
 <h4>{{ Adver.text }}</h4>
+<a href="{% url 'advertisement_update' Adver.pk %}" class="button">Изменить</a>
 
     {% if Adver.image %}
 
@@ -22,8 +23,17 @@
   <ul>
     {% for response in Adver.responses.all %}
 <li> {{ response.text }}  - {{ response.user }} || status:
-    {% if response.is_activited %} Активно {% else %} Не активно {% endif %} || ({{ response.dateCreation }})
-    <a href="{% url 'response_delete' pk=Adver.id pk_res=response.id %}"> Удалить </a>
+    {% if response.is_active %}
+    <p class="text-center"><a href="{% url 'response_deactive' pk=Adver.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Отклонить </a></p>
+
+    Активно
+    {% else %}
+    <p class="text-center"><a href="{% url 'response_active' pk=Adver.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Принять </a></p>
+
+    Не активно
+    {% endif %} || ({{ response.dateCreation }})
+        <a href="{% url 'response_delete' pk=Adver.id pk_res=response.id %}" class="button"> Удалить </a>
+
     {% empty %}
     <li>Тут пока нету откликов!</li>
     {% endfor %}
