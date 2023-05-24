@@ -7,8 +7,9 @@
 <h5>{{ Adver.dateCreation|date:'d M Y' }}</h5>
 <h1>{{ Adver.heading }}</h1>
 <h4>{{ Adver.text }}</h4>
+                         {% if Adver.author == request.user %}
 <a href="{% url 'advertisement_update' Adver.pk %}" class="button">Изменить</a>
-
+                          {% endif %}
     {% if Adver.image %}
 
 <div class="image-container">
@@ -16,24 +17,29 @@
 </div>
     {%  endif %}
   <hr>
-
+                         {% if request.user.is_authenticated and Adver.author != request.user %}
 <a href="{% url 'response_create' Adver.pk %}" class="button">Оставить отклик</a>
-
+                         {% endif %}
 <h2>Отклики:</h2>
   <ul>
     {% for response in Adver.responses.all %}
 <li> {{ response.text }}  - {{ response.user }} || status:
     {% if response.is_active %}
+                        {% if Adver.author == request.user %}
     <p class="text-center"><a href="{% url 'response_deactive' pk=Adver.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Отклонить </a></p>
-
+                        {% endif %}
     Активно
     {% else %}
+                         {% if Adver.author == request.user %}
     <p class="text-center"><a href="{% url 'response_active' pk=Adver.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Принять </a></p>
+                         {% endif %}
 
     Не активно
     {% endif %} || ({{ response.dateCreation }})
-        <a href="{% url 'response_delete' pk=Adver.id pk_res=response.id %}" class="button"> Удалить </a>
+         {% if Adver.author == request.user %}
 
+        <a href="{% url 'response_delete' pk=Adver.id pk_res=response.id %}" class="button"> Удалить </a>
+         {% endif %}
     {% empty %}
     <li>Тут пока нету откликов!</li>
     {% endfor %}
