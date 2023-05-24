@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -13,7 +13,7 @@ class AdvertisementView(ListView):
     model = Advertisement
     template_name = 'Advertisement.html'
     context_object_name = 'advertisements'
-    paginate_by = 10
+    paginate_by = 30
     ordering = ['-dateCreation']
 
     def get_queryset(self):
@@ -22,6 +22,10 @@ class AdvertisementView(ListView):
 
         return self.filterset.qs
 
+    def is_ad_author(self, advertisement):
+        user = self.request.user
+        return user.is_authenticated and Advertisement.objects.filter(author=user, id=advertisement.id).exists()
+
 
 class AdvertisementDetailView(DetailView):
     model = Advertisement
@@ -29,7 +33,7 @@ class AdvertisementDetailView(DetailView):
     context_object_name = 'Adver'
 
 
-class CreateAdvertisement(CreateView):  # PermissionRequiredMixin
+class CreateAdvertisement(LoginRequiredMixin, CreateView):  # PermissionRequiredMixin
 
     form_class = AdvertisementForm
     model = Advertisement
@@ -41,13 +45,13 @@ class CreateAdvertisement(CreateView):  # PermissionRequiredMixin
         return super().form_valid(form)
 
 
-class UpdateAdvertisement(UpdateView):
+class UpdateAdvertisement(LoginRequiredMixin, UpdateView):
     form_class = AdvertisementForm
     model = Advertisement
     template_name = 'UpdateAdvertisement.html'
 
 
-class DeleteAdvertisement(DeleteView):
+class DeleteAdvertisement(LoginRequiredMixin, DeleteView):
     model = Advertisement
     template_name = 'DeleteAdvertisement.html'
     success_url = reverse_lazy('advertisement')
@@ -65,7 +69,7 @@ class ResponsesDetailView(DetailView):
         return response
 
 
-class DeleteResponses(DeleteView):
+class DeleteResponses(LoginRequiredMixin, DeleteView):
     model = Responses
     template_name = 'DeleteResponses.html'
     success_url = '/'
@@ -77,7 +81,7 @@ class DeleteResponses(DeleteView):
         return response
 
 
-class ResponseCreateView(CreateView):
+class ResponseCreateView(LoginRequiredMixin, CreateView):
     form_class = ResponsesForm
     model = Responses
     template_name = 'response_create.html'
@@ -97,6 +101,7 @@ class ResponseCreateView(CreateView):
         context['previous_url'] = previous_url
         return context
 
+
 class ProfileView(ListView):
     model = Advertisement
     template_name = 'Profile.html'
@@ -114,6 +119,7 @@ class ProfileView(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 def activited_response(request, pk, pk_res):
     advertisement = get_object_or_404(Advertisement, id=pk)
     response = get_object_or_404(Responses, id=pk_res, advertisement=advertisement)
@@ -122,6 +128,7 @@ def activited_response(request, pk, pk_res):
     response.save()
     previous_url = request.META.get('HTTP_REFERER')
     return render(request, 'activited_response.html', {'text': text, 'previous_url': previous_url})
+
 
 def deactivited_response(request, pk, pk_res):
     advertisement = get_object_or_404(Advertisement, id=pk)

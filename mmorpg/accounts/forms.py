@@ -12,7 +12,7 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'first_name', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -26,4 +26,4 @@ class UserForm(UserCreationForm):
 
 
 class ConfirmationCodeForm(forms.Form):
-    code = forms.CharField(max_length=6, label="Confirmation Code")
+    code = forms.CharField(max_length=5, label="Confirmation Code")

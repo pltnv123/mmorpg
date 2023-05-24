@@ -3,9 +3,9 @@
 {% block content %}
 
     <h2>Confirmation code</h2>
-    <form method="post">
+    <form method="post" >
         {% csrf_token %}
-        {{ confirmation_code_form.as_p }}
+        {{ form.as_p }}
         <button type="submit">Submit</button>
     </form>
 {% endblock %}
