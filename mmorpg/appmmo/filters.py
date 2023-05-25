@@ -1,6 +1,6 @@
 import django_filters
 from django.forms import DateInput
-from django_filters import FilterSet, ChoiceFilter, ModelChoiceFilter
+from django_filters import FilterSet, ChoiceFilter, ModelChoiceFilter, CharFilter
 from .models import Advertisement
 
 
@@ -26,6 +26,12 @@ class AdvertisementFilter(FilterSet):
         label='Название объявления:',
     )
 
+def ourBranches(request):
+    if request is None:
+        return Advertisement.objects.none()
+
+    author = request.user
+    return Advertisement.objects.filter(author=author)
 
 class AdvFilter(FilterSet):
     added_after = django_filters.DateFilter(
@@ -39,7 +45,7 @@ class AdvFilter(FilterSet):
 
     filtertitleBoard = ModelChoiceFilter(
         field_name='heading',
-        queryset=Advertisement.objects.all(),
+        queryset=ourBranches,
         label='Выберите статью',
         empty_label="--Заголовок--"
     )
@@ -50,3 +56,4 @@ class AdvFilter(FilterSet):
         choices=Advertisement.CATEGORY_CHOIESES,
         empty_label="--Класс--"
     )
+

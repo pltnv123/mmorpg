@@ -21,6 +21,4 @@ urlpatterns = [
                   path('<int:pk>/<int:pk_res>/response_active/', activited_response, name='response_active'),
                   path('<int:pk>/<int:pk_res>/response_deactive/', deactivited_response, name='response_deactive'),
 
-                  # path('responses/<int:pk>/', ResponseDetailView.as_view(), name='response_detail'),
-
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

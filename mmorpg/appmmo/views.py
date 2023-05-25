@@ -190,13 +190,13 @@ class ProfileView(ListView):
     def get_queryset(self):
         """
         Метод для получения списка объявлений, отфильтрованного по пользователю.
-        ads.filter(author=self.request.user)  -  фильтрация списка объявлений по пользователю.
-        Создание экземпляра фильтра объявлений и возвращение его.
+        Второй аргумент request=self.request - передается в Filters.py и обрабатывается
+        методом ourBranches, после передается в AdvFilter и возвращается списком статей автора.
         """
 
-        ads = super().get_queryset()
-        ads = ads.filter(author=self.request.user)
-        self.filterset = AdvFilter(self.request.GET, ads)
+        queryset = super().get_queryset()
+        self.filterset = AdvFilter(self.request.GET, request=self.request,
+                                   queryset=queryset.filter(author=self.request.user))
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -209,6 +209,8 @@ class ProfileView(ListView):
         """
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        print(self.filterset)
+        print(self.filterset.qs)
         return context
 
 

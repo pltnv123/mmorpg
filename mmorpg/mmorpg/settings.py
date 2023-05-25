@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+from dotenv import load_dotenv
+
+
+load_dotenv()
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qy#r7+xw(b8g$!!r%ir_ns-&(&#6d+oqi(d&)3%3zf2n6*h8)c'
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,14 +153,21 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'pltnvntn'
-EMAIL_HOST_PASSWORD = "hyrevhwgyajdslff"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_TIMEOUT = 60
 
-DEFAULT_FROM_EMAIL = "pltnvntn@yandex.ru"
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
-CELERY_BROKER_URL = 'redis://:mKTnQexDkwuOF4YywXOMM9cggUbkQWa9@redis-13088.c293.eu-central-1-1.ec2.cloud.redislabs.com:13088/0'
-CELERY_RESULT_BACKEND = 'redis://:mKTnQexDkwuOF4YywXOMM9cggUbkQWa9@redis-13088.c293.eu-central-1-1.ec2.cloud.redislabs.com:13088/0'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+ADMINS = (
+    ('anton', os.getenv('ADMIN_EMAIL')),
+)
+
+LOGIN_REDIRECT_URL = reverse_lazy('advertisement')
+LOGOUT_REDIRECT_URL = reverse_lazy('advertisement')

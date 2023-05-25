@@ -3,11 +3,15 @@
 
 {% block content %}
 
-<form action="" method="get">
+<h1>Профиль пользователя {{ request.user.username }}</h1>
+  <form action="" method="get">
     {% csrf_token %}
     {{ filterset.form.as_p }}
     <input type="submit" value="Поиск"/>
-</form>
+  </form>
+  <hr>
+
+
 {% for advertisement in profile %}
 
 <h3>ОБЪЯВЛЕНИЕ</h3>
@@ -39,17 +43,17 @@
     <br>
 
     {% if response.is_active %}
-    {% if Adver.author == request.user %}
+    {% if advertisement.author == request.user %}
     <p class="text-center"><a href="{% url 'response_deactive' pk=advertisement.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Отклонить </a></p>
      {% endif %}
     Активирован
     {% else %}
-        {% if Adver.author == request.user %}
+        {% if advertisement.author == request.user %}
     <p class="text-center"><a href="{% url 'response_active' pk=advertisement.id pk_res=response.id %}" class="btn btn-secondary btn-sm"> Принять </a></p>
         {% endif %}
     Не активирован
     {% endif %}
-                {% if Adver.author == request.user %}
+                {% if Adver.author == request.user  %}
     <a href="{% url 'response_delete' pk=advertisement.id pk_res=response.id %}"> Удалить </a>
                 {% endif %}
     {% endfor %}
