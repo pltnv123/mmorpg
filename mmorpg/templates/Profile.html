@@ -8,12 +8,19 @@
     {{ filterset.form.as_p }}
     <input type="submit" value="Поиск"/>
 </form>
-
 {% for advertisement in profile %}
+
 <h3>ОБЪЯВЛЕНИЕ</h3>
 <h2>{{ advertisement.heading }}</h2>
 <p>{{ advertisement.text }}</p>
+
 <hr>
+    {% if advertisement.image %}
+
+<div class="image-container">
+<img src="{{ advertisement.image.url }}">
+</div>
+    {%  endif %}
 <ul>
     <hr>
     <h3>ОТКЛИКИ:</h3>
@@ -54,12 +61,27 @@
     <hr>
 
 </ul>
+
 {% endfor %}
 <div class="bottom">
   <hr>
   <h6><a href="/" class="button">На главную!</a></h6>
 </div>
 <style>
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      img {
+        max-width: 1000px;
+        max-height: 1000px;
+        min-width: 200px;
+        min-height: 200px;
+      }
+
       a.button {
   display: inline-block;
   border: 1px solid #ccc;
@@ -78,4 +100,5 @@ a.button:hover {
   color: #000;
 }
 </style>
+
 {% endblock content %}

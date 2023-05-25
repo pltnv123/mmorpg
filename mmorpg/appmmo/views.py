@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
+from mmorpg import settings
 from .filters import AdvertisementFilter, AdvFilter
 from .models import Advertisement, Responses
 from .forms import AdvertisementForm, ResponsesForm
@@ -93,6 +95,17 @@ class ResponseCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.advertisement_id = self.kwargs['pk']
         form.instance.user = self.request.user
+
+        advertisement = Advertisement.objects.get(pk=self.kwargs['pk'])
+        message = f"На ваше объявление \"{advertisement.heading}\" был оставлен новый отклик."
+        send_mail(
+            'Новый отклик на объявление',
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [advertisement.author.email],
+            fail_silently=False,
+        )
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -110,8 +123,9 @@ class ProfileView(ListView):
     queryset = Advertisement.objects.all().select_related('author')
 
     def get_queryset(self):
-        quaeryset = super().get_queryset()
-        self.filterset = AdvFilter(self.request.GET, quaeryset)
+        ads = super().get_queryset()
+        ads = ads.filter(author=self.request.user)
+        self.filterset = AdvFilter(self.request.GET, ads)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -121,12 +135,31 @@ class ProfileView(ListView):
 
 
 def activited_response(request, pk, pk_res):
+    """
+        Принимает отклик на объявление и отправляет уведомление на email пользователю, который оставил отклик.
+
+        :param request: объект запроса Django
+        :param pk: первичный ключ объявления
+        :param pk_res: первичный ключ отклика
+        :return: объект ответа Django, который отображает шаблон 'activited_response.html'
+
+    """
+
     advertisement = get_object_or_404(Advertisement, id=pk)
     response = get_object_or_404(Responses, id=pk_res, advertisement=advertisement)
     text = response.text
     response.is_active = True
     response.save()
     previous_url = request.META.get('HTTP_REFERER')
+
+    message = f"Ваш отклик \"{text}\" был принят!"
+    send_mail(
+        f'На объявление \"{advertisement.heading}\"',
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [response.user.email],
+        fail_silently=False,
+    )
     return render(request, 'activited_response.html', {'text': text, 'previous_url': previous_url})
 
 
