@@ -8,7 +8,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from .filters import AdvertisementFilter, AdvFilter
 from .models import Advertisement, Responses
 from .forms import AdvertisementForm, ResponsesForm
-
+from .tasks import send_email_
 
 # Create your views here.
 class AdvertisementView(ListView):
@@ -153,15 +153,10 @@ class ResponseCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
 
         advertisement = Advertisement.objects.get(pk=self.kwargs['pk'])
+        email = advertisement.author.email
         message = f"На ваше объявление \"{advertisement.heading}\" был оставлен новый отклик."
-        send_mail(
-            'Новый отклик на объявление',
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [advertisement.author.email],
-            fail_silently=False,
-        )
-
+        text = 'Новый отклик на объявление'
+        send_email_.delay(text, message, email)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -230,15 +225,10 @@ def activited_response(request, pk, pk_res):
     response.is_active = True
     response.save()
     previous_url = request.META.get('HTTP_REFERER')
-
+    email = response.user.email
     message = f"Ваш отклик \"{text}\" был принят!"
-    send_mail(
-        f'На объявление \"{advertisement.heading}\"',
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [response.user.email],
-        fail_silently=False,
-    )
+    text = f'На объявление \"{advertisement.heading}\"'
+    send_email_.delay(text, message, email)
     return render(request, 'activited_response.html', {'text': text, 'previous_url': previous_url})
 
 

@@ -38,3 +38,13 @@ def email_every_monday():
             recipient_list=[email],
             html_message=html_content,
         )
+
+@shared_task
+def send_email_(text, message, email):
+    send_mail(
+                text,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
